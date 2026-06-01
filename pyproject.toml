@@ -1,0 +1,43 @@
+[project]
+name = "rapidocr-fastapi"
+version = "0.1.0"
+description = "Queued RapidOCR HTTP service with API-key auth and Prometheus metrics."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.125.0",
+    "numpy>=1.26",
+    "prometheus-client>=0.23.0",
+    "pydantic-settings>=2.0",
+    "pillow>=10.0",
+    "python-multipart>=0.0.20",
+    "rapidocr>=3.8.0",
+    "rapidocr-onnxruntime>=1.2.0",
+    "uvicorn[standard]>=0.38.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.0",
+]
+
+[project.scripts]
+rapidocr-api = "rapidocr_api.main:run"
+rapidocr-add-key = "rapidocr_api.keygen:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rapidocr_api"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"

@@ -1,0 +1,5 @@
+# Use # for TOML comments. Keep the real api-keys.toml out of git.
+api_keys = [
+  # Local development key.
+  "dev-key-change-me",
+]

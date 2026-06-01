@@ -1,0 +1,36 @@
+services:
+  rapidocr:
+    build:
+      context: .
+    image: rapidocr-fastapi:local
+    init: true
+    restart: unless-stopped
+    mem_limit: "${MEM_LIMIT:-1536m}"
+    cpus: "${CPU_LIMIT:-6}"
+    ports:
+      - "${HOST_BIND:-127.0.0.1}:${HOST_PORT:-8000}:8000"
+    environment:
+      API_KEYS_FILE: "/app/api-keys.toml"
+      OCR_CONCURRENCY: "${OCR_CONCURRENCY:-1}"
+      MAX_UPLOAD_BYTES: "${MAX_UPLOAD_BYTES:-5242880}"
+      ENABLE_METRICS: "${ENABLE_METRICS:-true}"
+      METRICS_REQUIRE_API_KEY: "${METRICS_REQUIRE_API_KEY:-false}"
+      RAPIDOCR_USE_CLS: "${RAPIDOCR_USE_CLS:-false}"
+      OMP_NUM_THREADS: "${OCR_THREADS:-6}"
+      MKL_NUM_THREADS: "${OCR_THREADS:-6}"
+      OPENBLAS_NUM_THREADS: "${OCR_THREADS:-6}"
+      NUMEXPR_NUM_THREADS: "${OCR_THREADS:-6}"
+    volumes:
+      - "${API_KEYS_FILE:-./api-keys.toml}:/app/api-keys.toml:ro"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
