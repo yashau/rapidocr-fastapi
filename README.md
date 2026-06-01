@@ -51,14 +51,14 @@ Compose publishes the service on `127.0.0.1:8000` by default. Override the bind 
 
 ```bash
 HOST_BIND=0.0.0.0 HOST_PORT=8080 docker compose up --build
-MEM_LIMIT=1g CPU_LIMIT=4 OCR_THREADS=4 docker compose up --build
+MEM_LIMIT=3g CPU_LIMIT=4 OCR_THREADS=4 docker compose up --build
 ```
 
 | Setting | Default |
 |---|---:|
 | `HOST_BIND` | `127.0.0.1` |
 | `HOST_PORT` | `8000` |
-| `MEM_LIMIT` | `1536m` |
+| `MEM_LIMIT` | `4g` |
 | `CPU_LIMIT` | `6` |
 | `OCR_THREADS` | `6` |
 
