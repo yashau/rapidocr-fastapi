@@ -24,6 +24,7 @@ dev = [
 [project.scripts]
 rapidocr-api = "rapidocr_api.main:run"
 rapidocr-add-key = "rapidocr_api.keygen:main"
+rapidocr-remove-key = "rapidocr_api.keygen:remove_main"
 
 [build-system]
 requires = ["hatchling"]

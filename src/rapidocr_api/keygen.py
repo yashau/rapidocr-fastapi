@@ -65,6 +65,29 @@ def validate_toml(path: Path) -> None:
         tomllib.load(file)
 
 
+def remove_key(path: Path, key: str) -> bool:
+    if not path.exists():
+        return False
+
+    lines = path.read_text(encoding="utf-8").splitlines()
+    out = []
+    removed = False
+
+    for line in lines:
+        if key in line:
+            if out and out[-1].lstrip().startswith("#"):
+                out.pop()
+            removed = True
+            continue
+        out.append(line)
+
+    if removed:
+        path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+        validate_toml(path)
+
+    return removed
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate and append an API key.")
     parser.add_argument(
@@ -86,6 +109,18 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def parse_remove_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Remove an API key from the key file.")
+    parser.add_argument("key", help="API key to remove.")
+    parser.add_argument(
+        "--file",
+        type=Path,
+        default=DEFAULT_FILE,
+        help="TOML file to update. Defaults to api-keys.toml.",
+    )
+    return parser.parse_args(argv)
+
+
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(sys.argv[1:] if argv is None else argv)
     if args.bytes <= 0:
@@ -99,6 +134,12 @@ def main(argv: list[str] | None = None) -> None:
     append_key(args.file, key, comment)
     validate_toml(args.file)
     print(key)
+
+
+def remove_main(argv: list[str] | None = None) -> None:
+    args = parse_remove_args(sys.argv[1:] if argv is None else argv)
+    removed = remove_key(args.file, args.key)
+    print("removed" if removed else "not found")
 
 
 if __name__ == "__main__":
