@@ -1,5 +1,5 @@
 import tomllib
-from functools import cached_property, lru_cache
+from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field, ValidationError, field_validator
@@ -43,7 +43,7 @@ class Settings(BaseSettings):
 
     webui_dir: Path | None = Field(default=None, alias="WEBUI_DIR")
 
-    @cached_property
+    @property
     def api_keys(self) -> list[str]:
         return load_api_keys(self.api_keys_file)
 

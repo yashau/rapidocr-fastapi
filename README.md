@@ -81,6 +81,8 @@ uv run rapidocr-add-key
 
 The command prompts for a comment, writes it above the generated key, and prints the key once.
 
+The service reads `api-keys.toml` on each authenticated request, so adding or removing keys does not require a restart.
+
 Nested TOML is also supported:
 
 ```toml
